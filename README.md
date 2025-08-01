@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PNEO 설문 페이지</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+    }
+    .slide-img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .slide-img.active {
+      opacity: 1;
+    }
+    section {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .product-box {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 1rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+    .product-box img {
+      width: 300px;
+      border-radius: 10px;
+    }
+    form {
+      margin-top: 1rem;
+    }
+    input[type="email"], button {
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://picsum.photos/id/1011/1600/400" class="slide-img active"/>
+    <img src="https://picsum.photos/id/1025/1600/400" class="slide-img"/>
+    <img src="https://picsum.photos/id/1035/1600/400" class="slide-img"/>
+  </header>
+
+  <section>
+    <h2>설문 참여 및 제품 색상 선택</h2>
+
+    <div class="product-box">
+      <img src="https://m.media-amazon.com/images/I/71lOmmWJ+7L._AC_SY300_SX300_.jpg" alt="Product 1">
+      <div>
+        <h3>프리미엄 코 스트립</h3>
+        <p>운동 중 호흡 보조 및 숙면에 도움을 주는 프리미엄 비강 확장기입니다.</p>
+        <form onsubmit="submitVote(event, '프리미엄 코 스트립')">
+          <label><input type="radio" name="color1" value="화이트" required> 화이트</label><br>
+          <label><input type="radio" name="color1" value="베이지"> 베이지</label><br>
+          <label><input type="radio" name="color1" value="스킨"> 스킨</label><br>
+          <button type="submit">투표하기</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="product-box">
+      <img src="https://m.media-amazon.com/images/I/61fAAU0aZlL._AC_SL1200_.jpg" alt="Product 2">
+      <div>
+        <h3>슬림형 비강 스트립</h3>
+        <p>얇고 눈에 잘 띄지 않는 디자인으로 외출 시 사용하기 좋은 제품입니다.</p>
+        <form onsubmit="submitVote(event, '슬림형 비강 스트립')">
+          <label><input type="radio" name="color2" value="화이트" required> 화이트</label><br>
+          <label><input type="radio" name="color2" value="베이지"> 베이지</label><br>
+          <label><input type="radio" name="color2" value="스킨"> 스킨</label><br>
+          <button type="submit">투표하기</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="product-box">
+      <img src="https://m.media-amazon.com/images/I/61NOb3anKHL._AC_SL1200_.jpg" alt="Product 3">
+      <div>
+        <h3>고정력 강화형</h3>
+        <p>스포츠 활동이나 코골이 방지에 효과적인 고정력 강화형 제품입니다.</p>
+        <form onsubmit="submitVote(event, '고정력 강화형')">
+          <label><input type="radio" name="color3" value="화이트" required> 화이트</label><br>
+          <label><input type="radio" name="color3" value="베이지"> 베이지</label><br>
+          <label><input type="radio" name="color3" value="스킨"> 스킨</label><br>
+          <button type="submit">투표하기</button>
+        </form>
+      </div>
+    </div>
+
+    <h3>이메일 입력 시 20% 할인 쿠폰 제공</h3>
+    <form id="emailForm">
+      <input type="email" id="emailInput" placeholder="이메일을 입력하세요" required>
+      <button type="submit">쿠폰 받기</button>
+    </form>
+  </section>
+
+  <footer>
+    &copy; 2025 PNEO 설문 플랫폼. All rights reserved.
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll(".slide-img");
+    let slideIndex = 0;
+    setInterval(() => {
+      slides[slideIndex].classList.remove("active");
+      slideIndex = (slideIndex + 1) % slides.length;
+      slides[slideIndex].classList.add("active");
+    }, 3000);
+
+    function submitVote(event, productName) {
+      event.preventDefault();
+      const selected = event.target.querySelector('input[type="radio"]:checked');
+      const color = selected ? selected.value : "";
+
+      fetch("https://script.google.com/macros/s/AKfycbz_0GJrmTZfYM_UoqQ2DUNaSSsVCu14hKtlgG-CkILA4tPn7ofJjM7Z6BOq7gTE6RO5/exec", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ email: "", product: productName, color: color })
+      })
+      .then(() => alert("투표가 완료되었습니다!"))
+      .catch(() => alert("전송 실패"));
+    }
+
+    document.getElementById("emailForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("emailInput").value;
+      fetch("https://script.google.com/macros/s/AKfycbz_0GJrmTZfYM_UoqQ2DUNaSSsVCu14hKtlgG-CkILA4tPn7ofJjM7Z6BOq7gTE6RO5/exec", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ email: email, product: "", color: "" })
+      })
+      .then(() => alert("이메일이 저장되었습니다!"))
+      .catch(() => alert("전송 실패"));
+    });
+  </script>
+</body>
+</html>
